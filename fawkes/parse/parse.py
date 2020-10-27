@@ -119,7 +119,7 @@ def parse_json_lines(raw_user_reviews_file_path, review_channel, app_config):
         # We read the file line by line as each line is a valid json string. https://jsonlines.org/
         for line in raw_user_reviews_file_handle:
             review = json.loads(line)
-            # TODO: Conver this to a standard format like jsonpath.
+            # TODO: Convert this to a standard format like jsonpath.
             # Extract the message.
             message = utils.get_json_key_value(review, review_channel.message_key.split("."))
             # Extract the timestamp.

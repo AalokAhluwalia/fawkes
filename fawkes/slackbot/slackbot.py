@@ -19,8 +19,9 @@ from fawkes.configs.app_config import AppConfig, ReviewChannelTypes
 from fawkes.configs.fawkes_config import FawkesConfig
 from fawkes.review.review import Review
 
+
 def generate_star_from_rating(rating):
-    return "".join(["★" for i in range(rating)])
+    return "*" * rating
 
 
 def get_rating_color(rating):
@@ -45,7 +46,6 @@ def get_jira_details(review, app_config, issue_type):
         category=review.derived_insight.category)
 
     # Description will have the REVIEW followed by the unified json dump.
-    description = review.message
     description = review.message + \
         "\n\n Details : \n {code:json}" + json.dumps(review.to_dict(), indent=4) + "{code}"
 
