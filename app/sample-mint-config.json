@@ -7,7 +7,8 @@
         "index": "fawkes-user-reviews",
         "elastic_search_url": "http://localhost:9200/",
         "kibana_url": "http://localhost:5601",
-        "lifetime_rating_index": ""
+        "lifetime_rating_index": "",
+        "elastic_search_days_filter": 2000
     },
     "email_config": {
         "email_template_file": "fawkes/email_summary/templates/weekly-detailed.html",
@@ -55,7 +56,7 @@
             "is_channel_enabled": true,
             "timestamp_key": "updated",
             "timestamp_format": "",
-            "timezone": "UTC",
+            "timezone": "US/Pacific",
             "message_key": "content",
             "rating_key": "rating",
             "app_id": "300238550",
@@ -74,6 +75,24 @@
             "timezone": "UTC",
             "message_key": "reviewText",
             "rating_key": "overall",
+            "user_id_key": null
+        },
+        {
+            "channel_type": "splunk",
+            "channel_name": "splunk-review",
+            "file_type": "json",
+            "file_path": null,
+            "is_channel_enabled": false,
+            "timestamp_key": "updated",
+            "timestamp_format": "%Y-%m-%d %H:%M:%S",
+            "timezone": "UTC",
+            "message_key": "content",
+            "rating_key": "rating",
+            "host": "localhost",
+            "port": 443,
+            "username": "user",
+            "password": "password",
+            "query" : "index=user_reviews earliest=-10m latest=now",
             "user_id_key": null
         }
     ],

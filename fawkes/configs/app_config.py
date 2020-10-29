@@ -32,6 +32,7 @@ class ElasticConfig:
         lifetime_rating_index:
             A separate index has to be create for pushing the lifetime ratings of the user reviews.
             This is because lifetime rating differs from the usual user review itself.
+        elastic_search_days_filter: The filter in days to apply when pushing things to elastic search
     """
 
     def __init__(self, config):
@@ -39,6 +40,7 @@ class ElasticConfig:
         self.elastic_search_url = config["elastic_search_url"]
         self.kibana_url = config["kibana_url"]
         self.lifetime_rating_index = config["lifetime_rating_index"]
+        self.elastic_search_days_filter = config["elastic_search_days_filter"]
 
 class EmailConfig:
     """ The configurations required for sending an email summary from fawkes.
@@ -142,6 +144,7 @@ class ReviewChannelTypes:
     JSON = "json"
     BLANK = "blank"
     REMOTE_FILE = "remote_file"
+    SPLUNK = "splunk"
 
 class ReviewChannel:
     """ Definition of a Review Channel.
@@ -281,6 +284,27 @@ class SalesforceReviewChannel(ReviewChannel):
         self.oauth_params = config["oauth_params"]
         self.query_list = config["query_list"]
 
+class SplunkReviewChannel(ReviewChannel):
+    """ The configurations specific to Splunk.
+
+    Attributes:
+        host: splunk host for api.
+        port: port for api.
+        username: username to authenticate.
+        password: password to authenticate.
+        query:
+            query to retrieve the user reviews. It should contain earliest and latest time.
+            refer https://docs.splunk.com/Documentation/Splunk/latest/Search/Specifytimemodifiersinyoursearch
+    """
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.host = config["host"]
+        self.port = config["port"]
+        self.username = config["username"]
+        self.password = config["password"]
+        self.query = config["query"]
+
 class FawkesInternalDataConfig:
     """ The configurations specific to internals of where fawkes stores the intermediate data files.
 
@@ -367,6 +391,10 @@ Definition of a Review Channel.
             elif review_channel["channel_type"] == ReviewChannelTypes.SPREADSHEET:
                 self.review_channels.append(
                     SpreadSheetReviewChannel(review_channel)
+                )
+            elif review_channel["channel_type"] == ReviewChannelTypes.SPLUNK:
+                self.review_channels.append(
+                    SplunkReviewChannel(review_channel)
                 )
             else:
                 self.review_channels.append(
